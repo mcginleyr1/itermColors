@@ -4,7 +4,7 @@ For zsh prehook:
 1.) Copy into ~/.zsh/bin/
 2.) To zshrc add
 function precmd {
-    python ~/.zsh/rainbow-colors.py
+    python ~/.zsh/rainbow-parade.py
 }
 
 For Bash:
