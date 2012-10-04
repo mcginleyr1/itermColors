@@ -1,0 +1,13 @@
+Copy of Mikko Ohtamaa's work at http://opensourcehacker.com/2012/05/22/automatically-colorize-terminal-tabs-based-on-the-server-you-are-logged-into/ with minor modification
+
+For zsh prehook:
+1.) Copy into ~/.zsh/bin/
+2.) To zshrc add
+function precmd {
+    python ~/.zsh/rainbow-colors.py
+}
+
+For Bash:
+
+
+To do with ssh apply the same Bash changes to the server..
