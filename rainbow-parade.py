@@ -87,10 +87,11 @@ def main():
     """
     From Toholampi with love http://www.toholampi.fi/tiedostot/119_yleisesite_englanti_naytto.pdf
     """
-    lightness = random.random() 
-    saturation = random.random()
+    color = get_random_by_string('localhost')
+    if len(sys.argv) > 1:
+        color = get_random_by_string(sys.argv[1])
 
-    rainbow_unicorn(lightness, saturation)
+    rainbow_unicorn(color, color)
 
 
 if __name__ == "__main__":
