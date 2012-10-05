@@ -1,17 +1,19 @@
 Copy of Mikko Ohtamaa's work at http://opensourcehacker.com/2012/05/22/automatically-colorize-terminal-tabs-based-on-the-server-you-are-logged-into/ with minor modification
 
+NOTE: in the following examples PATH == where you want to save color data
+
 For zsh prehook:
 1.) Copy into ~/.zsh/bin/
 2.) To zshrc add
 function precmd {
-    python ~/.zsh/rainbow-parade.py
+    python ~/.zsh/rainbow-parade.py PATH
 }
 
 For Bash:
 
 1.) Copy into a directory
 2.) To bashrc or profile add 
- python ~/dirchosen/rainbow-parade.py
+ python ~/dirchosen/rainbow-parade.py PATH
 
 For SSH:
 
