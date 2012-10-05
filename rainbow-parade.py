@@ -8,10 +8,11 @@
        to configure beforehand.
 
 """
-
-import socket
-import random
 import colorsys
+import contextlib
+import pickle
+import random
+import socket
 import sys
 
 # http://stackoverflow.com/questions/1523427/python-what-is-the-common-header-format
@@ -29,7 +30,22 @@ An iTerm 2 example (recolorize dark grey background and black text):
 
     rainbow-parade.py 0.7 0.4
 """
+color_dict = {}
 
+FILENAME = 'colors'
+
+def load_colordict(path):
+    try:
+        with contextlib.closing(open(path + FILENAME, 'r')) as color_file:
+            return pickle.load(color_file)
+    except IOError:
+        return {}
+
+
+def save_color(path, name, color):
+    color_dict[name] = color
+    with contextlib.closing(open(path + FILENAME, 'w')) as color_file:
+        pickle.dump(color_dict, color_file,)
 
 def get_random_by_string(s):
     """
@@ -65,7 +81,7 @@ def decorate_terminal(color):
     # http://meta.ath0.com/2006/05/24/unix-shell-games-with-kde/
 
 
-def rainbow_unicorn(lightness, saturation):
+def rainbow_unicorn(value, name):
     """
     Colorize terminal tab by your server name.
 
@@ -74,24 +90,30 @@ def rainbow_unicorn(lightness, saturation):
     http://games.adultswim.com/robot-unicorn-attack-twitchy-online-game.html
     """
 
-    name = socket.gethostname()
-
-    hue = get_random_by_string(name)
-
-    color = colorsys.hls_to_rgb(hue, lightness, saturation)
-
+    color = colorsys.hls_to_rgb(value, value, value)
+    
     decorate_terminal(color)
 
+def get_color(path, name):
+    color_dict = load_colordict(path)
+
+    color =  color_dict.get(name, None)
+    if not color:
+        color = get_random_by_string(name)
+        save_color(path, name, color)
+    return color
 
 def main():
     """
     From Toholampi with love http://www.toholampi.fi/tiedostot/119_yleisesite_englanti_naytto.pdf
     """
-    color = get_random_by_string('localhost')
+    name = socket.gethostname() 
     if len(sys.argv) > 1:
-        color = get_random_by_string(sys.argv[1])
+        path = sys.argv[1]
 
-    rainbow_unicorn(color, color)
+    color = get_color(path, name)
+
+    rainbow_unicorn(color, name)
 
 
 if __name__ == "__main__":

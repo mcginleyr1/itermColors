@@ -9,5 +9,9 @@ function precmd {
 
 For Bash:
 
+1.) Copy into a directory
+2.) To bashrc or profile add 
+ python ~/dirchosen/rainbow-parade.py
 
-To do with ssh apply the same Bash changes to the server..
+For SSH:
+
