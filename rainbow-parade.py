@@ -20,11 +20,8 @@ __credits__ = ["Mikko Ohtamaa", "Antti Haapala"]
 USAGE = """
 Colorize terminal tab based on the current host name.
 
-Usage: rainbow-parade.py [0-1.0] [0-1.0] # Lightness and saturation values
+Usage: rainbow-parade.py PATH NAME 
 
-An iTerm 2 example (recolorize dark grey background and black text):
-
-    rainbow-parade.py 0.7 0.4
 """
 color_dict = {}
 
@@ -84,7 +81,7 @@ def get_color(path, name):
 
 def main():
     """
-    From Toholampi with love http://www.toholampi.fi/tiedostot/119_yleisesite_englanti_naytto.pdf
+    based on http://www.toholampi.fi/tiedostot/119_yleisesite_englanti_naytto.pdf
     """
     name = socket.gethostname() 
     if len(sys.argv) > 1:
