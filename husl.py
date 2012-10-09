@@ -2,8 +2,6 @@ import operator
 import math
 
     
-PI = 3.1415926535897932384626433832795
-
 class HuslConverter():
 
     #Pass in HUSL values and get back RGB values, H ranges from 0 to 360, S and L from 0 to 100.
@@ -38,7 +36,7 @@ class HuslConverter():
     def maxChroma(self, L, H):
         _ref = [0.0, 1.0]
 
-        hrad = ((H / 360.0) * 2 * PI)
+        hrad = ((H / 360.0) * 2 * math.pi)
         sinH = (math.sin(hrad))
         cosH = (math.cos(hrad))
         sub1 = (math.pow(L + 16, 3) / 1560896.0)
@@ -163,7 +161,7 @@ class HuslConverter():
 
         C = (math.pow(math.pow(U, 2) + math.pow(V, 2), (1 / 2.0)))
         Hrad = (math.atan2(V, U))
-        H = (Hrad * 360.0 / 2.0 / PI)
+        H = (Hrad * 360.0 / 2.0 / math.pi)
         if H < 0:
             H = 360 + H
 
@@ -174,7 +172,7 @@ class HuslConverter():
         C = tripple[1] 
         H = tripple[2]
 
-        Hrad = (H / 360.0 * 2.0 * PI)
+        Hrad = (H / 360.0 * 2.0 * math.pi)
         U = (math.cos(Hrad) * C)
         V = (math.sin(Hrad) * C)
 
