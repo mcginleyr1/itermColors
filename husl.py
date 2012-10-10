@@ -4,16 +4,6 @@ import math
     
 class HuslConverter():
 
-    #Pass in HUSL values and get back RGB values, H ranges from 0 to 360, S and L from 0 to 100.
-    #RGB values will range from 0 to 1.
-    def HUSLtoRGB(self, h, s, l):
-        return self.XYZ_RGB(self.LUV_XYZ(self.LCH_LUV(self.HUSL_LCH([h, s, l]))))
-
-    #Pass in RGB values ranging from 0 to 1 and get back HUSL values.
-    #H ranges from 0 to 360, S and L from 0 to 100.
-    def RGBtoHUSL(self, r, g, b):
-        return self.LCH_HUSL(self.LUV_LCH(self.XYZ_LUV(self.RGB_XYZ([r, g, b]))))
-
     m = [
             [3.2406, -1.5372, -0.4986], 
             [-0.9689, 1.8758, 0.0415], 
@@ -32,6 +22,17 @@ class HuslConverter():
     refV = 0.46834
     lab_e = 0.008856
     lab_k = 903.3
+
+
+    #Pass in HUSL values and get back RGB values, H ranges from 0 to 360, S and L from 0 to 100.
+    #RGB values will range from 0 to 1.
+    def HUSLtoRGB(self, h, s, l):
+        return self.XYZ_RGB(self.LUV_XYZ(self.LCH_LUV(self.HUSL_LCH([h, s, l]))))
+
+    #Pass in RGB values ranging from 0 to 1 and get back HUSL values.
+    #H ranges from 0 to 360, S and L from 0 to 100.
+    def RGBtoHUSL(self, r, g, b):
+        return self.LCH_HUSL(self.LUV_LCH(self.XYZ_LUV(self.RGB_XYZ([r, g, b]))))
 
     def maxChroma(self, L, H):
         _ref = [0.0, 1.0]
@@ -91,29 +92,29 @@ class HuslConverter():
         else:
             return (c / 12.92)
 
-    def rgbPrepare(self, tripple):
+    def rgbPrepare(self, triple):
         for i in range(0, 3):
-            tripple[i] = round(tripple[i], 3)
+            triple[i] = round(triple[i], 3)
 
-            if tripple[i] < 0 or tripple[i] > 1:
-                if tripple[i] < 0:
-                    tripple[i] = 0
+            if triple[i] < 0 or triple[i] > 1:
+                if triple[i] < 0:
+                    triple[i] = 0
                 else:
-                    tripple[i] = 1
+                    triple[i] = 1
 
-            tripple[i] = round(tripple[i]*255, 0)
+            triple[i] = round(triple[i]*255, 0)
 
-        return tripple
+        return triple
 
-    def XYZ_RGB(self, tripple):
-        return [self.fromLinear(self.dotProduct(self.m[0], tripple, 3)),
-                self.fromLinear(self.dotProduct(self.m[1], tripple, 3)),
-                self.fromLinear(self.dotProduct(self.m[2], tripple, 3))]
+    def XYZ_RGB(self, triple):
+        return [self.fromLinear(self.dotProduct(self.m[0], triple)),
+                self.fromLinear(self.dotProduct(self.m[1], triple)),
+                self.fromLinear(self.dotProduct(self.m[2], triple))]
 
-    def RGB_XYZ(self, tripple):
-        R = tripple[0]
-        G = tripple[1] 
-        B = tripple[2]
+    def RGB_XYZ(self, triple):
+        R = triple[0]
+        G = triple[1] 
+        B = triple[2]
 
         rgbl = [self.toLinear(R), self.toLinear(G), self.toLinear(B)]
 
@@ -123,10 +124,10 @@ class HuslConverter():
            
         return [X, Y, Z]
 
-    def XYZ_LUV(self, tripple):
-        X = tripple[0] 
-        Y = tripple[1] 
-        Z = tripple[2]
+    def XYZ_LUV(self, triple):
+        X = triple[0] 
+        Y = triple[1] 
+        Z = triple[2]
 
         varU = (4 * X) / (X + (15.0 * Y) + (3 * Z))
         varV = (9 * Y) / (X + (15.0 * Y) + (3 * Z))
@@ -136,14 +137,14 @@ class HuslConverter():
 
         return [L, U, V]
 
-    def LUV_XYZ(self, tripple):
-        L = tripple[0] 
-        U = tripple[1] 
-        V = tripple[2]
+    def LUV_XYZ(self, triple):
+        L = triple[0] 
+        U = triple[1] 
+        V = triple[2]
 
         if L == 0:
-            tripple[2] = tripple[1] = tripple[0] = 0.0
-            return tripple
+            triple[2] = triple[1] = triple[0] = 0.0
+            return triple
 
         varY = self.f_inv((L + 16) / 116.0)
         varU = U / (13.0 * L) + self.refU
@@ -154,10 +155,10 @@ class HuslConverter():
 
         return [X, Y, Z]
 
-    def LUV_LCH(self, tripple):
-        L = tripple[0] 
-        U = tripple[1] 
-        V = tripple[2]
+    def LUV_LCH(self, triple):
+        L = triple[0] 
+        U = triple[1] 
+        V = triple[2]
 
         C = (math.pow(math.pow(U, 2) + math.pow(V, 2), (1 / 2.0)))
         Hrad = (math.atan2(V, U))
@@ -167,10 +168,10 @@ class HuslConverter():
 
         return [L, C, H]
 
-    def LCH_LUV(self, tripple):
-        L = tripple[0] 
-        C = tripple[1] 
-        H = tripple[2]
+    def LCH_LUV(self, triple):
+        L = triple[0] 
+        C = triple[1] 
+        H = triple[2]
 
         Hrad = (H / 360.0 * 2.0 * math.pi)
         U = (math.cos(Hrad) * C)
@@ -178,20 +179,20 @@ class HuslConverter():
 
         return [L, U, V]
 
-    def HUSL_LCH(self, tripple):
-        H = tripple[0] 
-        S = tripple[1] 
-        L = tripple[2]
+    def HUSL_LCH(self, triple):
+        H = triple[0] 
+        S = triple[1] 
+        L = triple[2]
 
         max = self.maxChroma(L, H)
         C = max / 100.0 * S
 
         return [L, C, H]
 
-    def LCH_HUSL(self, tripple):
-        L = tripple[0] 
-        C = tripple[1] 
-        H = tripple[2]
+    def LCH_HUSL(self, triple):
+        L = triple[0] 
+        C = triple[1] 
+        H = triple[2]
 
         max = self.maxChroma(L, H)
         S = C / max * 100
