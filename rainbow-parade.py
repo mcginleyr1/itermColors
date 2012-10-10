@@ -15,6 +15,8 @@ import random
 import socket
 import sys
 
+import husl
+
 __credits__ = ["Mikko Ohtamaa", "Antti Haapala"]
 
 USAGE = """
@@ -26,6 +28,8 @@ Usage: rainbow-parade.py PATH NAME
 color_dict = {}
 
 FILENAME = 'colors'
+
+converter = husl.HuslConverter()
 
 def load_colordict(path):
     try:
@@ -45,7 +49,7 @@ def get_random_by_string(s):
     Get always the same 0...1 random number based on an arbitrary string
     """
     random.seed(s)
-    return random.random()
+    return random.randint(0, 360)
 
 
 def decorate_terminal(color):
@@ -65,8 +69,8 @@ def colorize_border(path, name):
     Colorize terminal tab by your server name.
     """
     value = get_color(path, name)
-
-    color = colorsys.hls_to_rgb(value, value, value)
+    
+    color = converter.HUSLtoRGB(value, value, value)
     
     decorate_terminal(color)
 
@@ -87,7 +91,7 @@ def main():
     if len(sys.argv) > 1:
         path = sys.argv[1]
 
-    if len(sys.argv) > 2
+    if len(sys.argv) > 2:
         name = sys.argv[2]
 
     colorize_border(path, name)
