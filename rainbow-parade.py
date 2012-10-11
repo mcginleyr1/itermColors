@@ -8,7 +8,6 @@ Benefit is that each server gets a distinct color which you do not need
 to configure beforehand.
 
 """
-import colorsys
 import contextlib
 import pickle
 import random
@@ -29,8 +28,6 @@ color_dict = {}
 
 FILENAME = 'colors'
 
-converter = husl.HuslConverter()
-
 def load_colordict(path):
     try:
         with contextlib.closing(open(path + FILENAME, 'r')) as color_file:
@@ -39,8 +36,8 @@ def load_colordict(path):
         return {}
 
 
-def save_color(path, name, color):
-    color_dict[name] = color
+def save_color(path, name, hsl):
+    color_dict[name] = hsl
     with contextlib.closing(open(path + FILENAME, 'w')) as color_file:
         pickle.dump(color_dict, color_file,)
 
@@ -49,7 +46,7 @@ def get_random_by_string(s):
     Get always the same 0...1 random number based on an arbitrary string
     """
     random.seed(s)
-    return random.randint(0, 360)
+    return (random.randint(0, 360), random.randint(0, 100), random.randint(0, 100))
 
 
 def decorate_terminal(color):
@@ -68,20 +65,20 @@ def colorize_border(path, name):
     """
     Colorize terminal tab by your server name.
     """
-    value = get_color(path, name)
+    H, S, L = get_color(path, name)
     
-    color = converter.HUSLtoRGB(value, value, value)
-    
+    color = husl.husl_to_rgb(H, S, L)
+   
     decorate_terminal(color)
 
 def get_color(path, name):
     color_dict = load_colordict(path)
 
-    color =  color_dict.get(name, None)
-    if not color:
-        color = get_random_by_string(name)
-        save_color(path, name, color)
-    return color
+    hsl =  color_dict.get(name, None)
+    if not hsl:
+        hsl = get_random_by_string(name)
+        save_color(path, name, hsl)
+    return hsl 
 
 def main():
     """
